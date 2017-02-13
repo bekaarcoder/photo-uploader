@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>Photo Uploader</head>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.8/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyArCOwW8enoUElADoPfDlGQOtjv4JA7_KQ",
+    authDomain: "webapp-71c18.firebaseapp.com",
+    databaseURL: "https://webapp-71c18.firebaseio.com",
+    storageBucket: "webapp-71c18.appspot.com",
+    messagingSenderId: "231481314809"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<body>
+
+<div ng-app="myApp" ng-controller="MyCtrl">
+ 
+ <progress value="0" max="100" id="uploader">0%</progress>
+<button ngf-select="myFunction($files)" accept="image/jpeg">Choose Files</button>
+<button ng-click="showAllImg()">Get All Pics</button>
+<br>
+<div id="imageUpload">
+	<!-- <img ng-src="{{imgSrc}}"> -->
+</div>
+
+<p id="demo" ng-repeat="file in fileList">
+	Name: {{file.name}} </br>
+    Type: {{file.type}} </br>
+</p>
+
+<p ng-repeat="x in imgURLs">
+	Name: {{x.name}} </br>
+</p>
+
+<pre id="preObj"></pre>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload-shim.js"></script>
+<script type="text/javascript" src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+<script>
+var app = angular.module('myApp', ['ngFileUpload']);
+
+app.controller('MyCtrl', ['$scope', function($scope){
+	var uploader = document.getElementById('uploader');
+	var imgUpload = document.getElementById('imageUpload');
+	$scope.imgSrc = "file:///C:/Users/Shashank/Pictures/Camera%20Roll/WIN_20170204_20_55_05_Pro.jpg";
+	$scope.imgURLs = [];
+
+	// Download all images from Firebase storage
+	$scope.showAllImg = function(){
+		var preObject = document.getElementById('preObj');
+		var database = firebase.database();
+		var dbRefObj = database.ref().child('ImageUrl');
+		dbRefObj.on('value', function(snap) {
+			var readObj = snap.val();
+			$scope.imgURLs = Object.values(readObj);
+			console.log($scope.imgURLs);
+			// for(x in readObj) {
+			// 	console.log(readObj[x].name);
+			// }
+		});
+	};
+
+	// Upload file to Firebase Storage
+	$scope.myFunction = function(files){
+	    $scope.fileList = files;
+	    var file = files[0];
+	    console.log(files);
+	    // Create a storage reference
+	    var storageRef = firebase.storage().ref('Photos/'+ file.name);
+
+	    // Upload file
+	    var task = storageRef.put(file);
+
+	    // Update progress bar
+	    task.on('state_changed', function progress(snapshot) {
+	    	var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+	    	uploader.value = percentage;
+	    }, function error(err) {
+
+	    }, function complete() {
+	    	console.log("Upload Complete");
+	    	//Get Download URL
+		    storageRef.getDownloadURL().then(function(url) {
+		    	$scope.imgScr = url;
+		    	imgUpload.innerHTML = "<img src='"+ url +"' width='50%'>";
+		    	// console.log(url);
+		    }).catch(function(error) {
+		    	switch (error.code) {
+		    		case 'storage/object_not_found':
+		    		$scope.imgSrc = "file:///C:/Users/Shashank/Pictures/Camera%20Roll/WIN_20170204_20_55_05_Pro.jpg";
+		    		break;
+		    	}
+		    });
+
+		    // Get metadata of file
+		    storageRef.getMetadata().then(function(metadata) {
+		    	// console.log(metadata);
+		    	var imgName = metadata.name;
+		    	var imgUrl = metadata.downloadURLs[0];
+		    	var database = firebase.database();
+		    	var dbRef = database.ref('ImageUrl');
+		    	dbRef.push({
+		    		name: imgName,
+		    		url: imgUrl
+		    	}).then(function(ref) {
+		    		console.log("Metadata saved to database");
+		    	}).catch(function(error){
+		    		console.log(error);
+		    	});
+		    }).catch(function(error) {
+		    	console.log(error);
+		    });
+	    });
+	};
+}]);
+
+</script>
+</body>
+</html>

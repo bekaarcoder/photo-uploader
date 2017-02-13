@@ -1,0 +1,14 @@
+<div class="container">
+	<h2 class="text-center">Firebase Photo Uploader</h2>
+	<div class="row uploadBox">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="{{percentage}}" aria-valuemin="0" aria-valuemax="100" id="uploadbar">{{percentage}}% Complete</div>
+			</div>
+			<div class="text-center">
+				<button ngf-select="selectFile($files)" accept="image/jpeg" class="btn btn-success">Choose File</button>
+				<a href="#!/gallery" class="btn btn-success">Go To Gallery</a>
+			</div>
+		</div>
+	</div>
+</div>

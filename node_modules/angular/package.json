@@ -1,0 +1,58 @@
+{
+  "name": "angular",
+  "version": "1.6.0-rc.2",
+  "description": "HTML enhanced for web apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angular/angular.js.git"
+  },
+  "keywords": [
+    "angular",
+    "framework",
+    "browser",
+    "client-side"
+  ],
+  "author": {
+    "name": "Angular Core Team",
+    "email": "angular-core+npm@google.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/angular.js/issues"
+  },
+  "homepage": "http://angularjs.org",
+  "gitHead": "b4c2acde83a66bc2ce99f5df1193cc59bfc8e6de",
+  "_id": "angular@1.6.0-rc.2",
+  "_shasum": "fde9a63260dee79192f49ea4e21893952d249bc7",
+  "_from": "angular@1.6.0-rc.2",
+  "_npmVersion": "2.15.8",
+  "_nodeVersion": "4.4.7",
+  "_npmUser": {
+    "name": "angularcore",
+    "email": "angular-core+npm@google.com"
+  },
+  "dist": {
+    "shasum": "fde9a63260dee79192f49ea4e21893952d249bc7",
+    "tarball": "https://registry.npmjs.org/angular/-/angular-1.6.0-rc.2.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "angularcore",
+      "email": "angular-core+npm@google.com"
+    },
+    {
+      "name": "petebd",
+      "email": "pete@bacondarwin.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/angular-1.6.0-rc.2.tgz_1480025243637_0.05400721589103341"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/angular/-/angular-1.6.0-rc.2.tgz"
+}
