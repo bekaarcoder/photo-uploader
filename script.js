@@ -16,11 +16,11 @@ angular.module('photoUpload', [
 	})
 }])
 
-.controller('MainCtrl', ['$scope', '$firebaseStorage', function($scope, $firebaseStorage){
+.controller('MainCtrl', ['$scope', '$firebaseStorage', '$firebaseArray', function($scope, $firebaseStorage, $firebaseArray){
 	var uploadbar = document.getElementById('uploadbar');
 	$scope.selectFile = function(files){
 		var file = files[0];
-		console.log(file);
+		// console.log(file);
 		// Create firebase storage referrence
 		var storageRef = firebase.storage().ref('Photos/'+ file.name);
 		var storage = $firebaseStorage(storageRef);
@@ -34,7 +34,19 @@ angular.module('photoUpload', [
 		});
 		// Get Download URL
 		uploadTask.$complete(function(snapshot){
-			console.log(snapshot.downloadURL);
+			var imageUrl = snapshot.downloadURL;
+			var imageName = snapshot.metadata.name;
+			// console.log($scope.imageName + '-' + $scope.imageUrl);
+			var ref = firebase.database().ref("ImageUrls");
+			var urls = $firebaseArray(ref);
+			urls.$add({
+				name: imageName,
+				url: imageUrl
+			}).then(function(ref){
+				var id = ref.key;
+				console.log("Added image url to database with id = " + id);
+				urls.$indexFor(id);
+			});
 		});
 		// Error while uploading
 		uploadTask.$error(function(error){
@@ -42,8 +54,11 @@ angular.module('photoUpload', [
 		});
 
 	};
+
 }])
 
-.controller('GalleryCtrl', ['$scope', function($scope){
-	
+.controller('GalleryCtrl', ['$scope', '$firebaseArray', function($scope, $firebaseArray){
+	var ref = firebase.database().ref("ImageUrls");
+	var urls = $firebaseArray(ref);
+	$scope.urls = urls;
 }])

@@ -1,1 +1,7 @@
-Gallery Page
+<div class="container" ng-controller="GalleryCtrl">
+	<div class="row">
+		<div class="col-md-4" ng-repeat="image in urls">
+			<img ng-src="{{image.url}}" class="img-thumbnail" id="{{image.$id}}">
+		</div>
+	</div>
+</div>
