@@ -1,0 +1,37 @@
+<div class="container" ng-controller="ManageCtrl">
+	<h2 class="text-center">Manage Photos</h2>
+	<div class="row" style="margin:20px 0px 40px 0px">
+		<div class="col-md-6 col-md-offset-3">
+			<input type="text" ng-model="search" class="form-control" placeholder="Search Photos">
+		</div>
+		<div class="col-md-3 text-right">
+			<a href="#!/gallery" class="btn btn-success">Back to Gallery</a>
+		</div>
+	</div>
+	<div class="row content-box">
+		<div class="col-md-10 col-md-offset-1">
+			<div class="row spacing">
+				<div class="col-md-2">
+					<strong>Image</strong>
+				</div>
+				<div class="col-md-8">
+					<p><strong>Image Name</strong></p>
+				</div>
+				<div class="col-md-2">
+					<p><strong>Remove</strong></p>
+				</div>
+			</div>
+			<div class="row spacing" ng-repeat="url in urls | filter:search">
+				<div class="col-md-2">
+					<img ng-src="{{url.url}}" style="width: 100%">
+				</div>
+				<div class="col-md-8">
+					<p>{{url.name}} - {{url.$id}}</p>
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-sm btn-danger" ng-click="deleteFile(url)">Delete This Photo</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

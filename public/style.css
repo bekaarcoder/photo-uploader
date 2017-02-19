@@ -1,0 +1,19 @@
+.uploadBox {
+	margin-top: 120px;
+}
+
+.fileName {
+	word-wrap: break-word;
+}
+
+.fileslist, .tags {
+	margin: 5px 0px 5px 0px;
+}
+
+.spacing {
+	margin: 10px 0px 10px 0px;
+}
+
+.content-box {
+	border: 1px solid #CCC;
+}

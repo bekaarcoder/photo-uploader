@@ -11,6 +11,9 @@ angular.module('photoUpload', [
 	}).when('/gallery', {
 		templateUrl: 'gallery.html',
 		controller: 'GalleryCtrl'
+	}).when('/manage', {
+		templateUrl: 'manage.html',
+		controller: 'ManageCtrl'
 	}).otherwise({
 		redirectTo: '/main'
 	})
@@ -18,8 +21,27 @@ angular.module('photoUpload', [
 
 .controller('MainCtrl', ['$scope', '$firebaseStorage', '$firebaseArray', function($scope, $firebaseStorage, $firebaseArray){
 	var uploadbar = document.getElementById('uploadbar');
+	$scope.topics = {};
+	$scope.selectMsg = true;
+
 	$scope.selectFile = function(files){
-		var file = files[0];
+		$scope.fileList = files;
+		// console.log($scope.fileList);
+		$scope.selectMsg = false;
+	};
+
+	// Remove file from list
+	$scope.removeFile = function(file){
+		var index = $scope.fileList.indexOf(file);
+		$scope.fileList.splice(index, 1);
+		if($scope.fileList.length < 1) {
+			$scope.selectMsg = true;
+		}
+	}
+
+	$scope.uploadFile = function(file){
+		var file = file;
+		var tags = $scope.topics.tag;
 		// console.log(file);
 		// Create firebase storage referrence
 		var storageRef = firebase.storage().ref('Photos/'+ file.name);
@@ -41,7 +63,8 @@ angular.module('photoUpload', [
 			var urls = $firebaseArray(ref);
 			urls.$add({
 				name: imageName,
-				url: imageUrl
+				url: imageUrl,
+				tags: tags
 			}).then(function(ref){
 				var id = ref.key;
 				console.log("Added image url to database with id = " + id);
@@ -61,4 +84,21 @@ angular.module('photoUpload', [
 	var ref = firebase.database().ref("ImageUrls");
 	var urls = $firebaseArray(ref);
 	$scope.urls = urls;
+}])
+
+.controller('ManageCtrl', ['$scope', '$firebaseArray', '$firebaseStorage', function($scope, $firebaseArray, $firebaseStorage){
+	var ref = firebase.database().ref("ImageUrls");
+	var urls = $firebaseArray(ref);
+	$scope.urls = urls;
+
+	$scope.deleteFile = function(url){
+		// Get file refferance
+		var storageRef = firebase.storage().ref('Photos/' + url.name);
+		var storage = $firebaseStorage(storageRef);
+		// Delet file
+		storage.$delete().then(function(){
+			$scope.urls.$remove(url);
+			console.log("Successfully deleted file");
+		});
+	};
 }])
