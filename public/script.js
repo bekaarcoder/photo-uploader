@@ -23,6 +23,7 @@ angular.module('photoUpload', [
 	var uploadbar = document.getElementById('uploadbar');
 	$scope.topics = {};
 	$scope.selectMsg = true;
+	$scope.msg = "No File Selected. Select a file to upload.";
 
 	$scope.selectFile = function(files){
 		$scope.fileList = files;
@@ -42,6 +43,9 @@ angular.module('photoUpload', [
 	$scope.uploadFile = function(file){
 		var file = file;
 		var tags = $scope.topics.tag;
+		if(tags == undefined){
+			var tags = null;
+		}
 		// console.log(file);
 		// Create firebase storage referrence
 		var storageRef = firebase.storage().ref('Photos/'+ file.name);
@@ -56,6 +60,8 @@ angular.module('photoUpload', [
 		});
 		// Get Download URL
 		uploadTask.$complete(function(snapshot){
+			$scope.removeFile(file);
+			$scope.msg = "Photo Uploaded Successfully. Select another file to upload."
 			var imageUrl = snapshot.downloadURL;
 			var imageName = snapshot.metadata.name;
 			// console.log($scope.imageName + '-' + $scope.imageUrl);
@@ -95,10 +101,13 @@ angular.module('photoUpload', [
 		// Get file refferance
 		var storageRef = firebase.storage().ref('Photos/' + url.name);
 		var storage = $firebaseStorage(storageRef);
-		// Delet file
+		// Delete file
 		storage.$delete().then(function(){
 			$scope.urls.$remove(url);
 			console.log("Successfully deleted file");
+		}).catch(function(error){
+			$scope.urls.$remove(url);
+			console.log(error.message + "Removed URL from database.");
 		});
 	};
 }])

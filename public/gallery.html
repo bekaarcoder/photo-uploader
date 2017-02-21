@@ -10,9 +10,9 @@
 			<a href="#!/main" class="btn btn-success">Add More Photos</a>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-4" ng-repeat="image in urls | filter:search">
-			<img ng-src="{{image.url}}" class="img-thumbnail img-responsive" id="{{image.$id}}">
+	<div class="row image-grid">
+		<div ng-repeat="image in urls | filter:search" style="width: 100%">
+			<img ng-src="{{image.url}}" class="img-thumbnail img-responsive" id="{{image.$id}}" style="width: 100%">
 		</div>
 	</div>
 </div>
